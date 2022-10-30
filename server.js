@@ -197,49 +197,46 @@ function addEmployee(){
 //function to update an employes role
 
 function updateEmployeeRole() {
-    //gather information about all of the employees
-    connection.query(y(`SELECT * FROM employee`, function (err, data) {
+    connection.query(`SELECT * FROM employee`, function (err, data) {
         if (err) throw err;
 
         let employees = [];
-        //adding all employes in the employee table to a new array
-        for(var i =0; i<data.length;i++){
-            employees.push(data[i].firstName)
+        let roles = [];
+
+        for (let i = 0; i < data.length; i++) {
+            employees.push(data[i].first_name)
         }
 
-        //selecting everything from roles and adding it to a new array
-        let role = [];
-        connection.query(`SELECT * FROM role`, function (err, data) {
+        connection.query(`SELECT * FROM roles`, function (err, data) {
             if (err) throw err;
 
             for (let i = 0; i < data.length; i++) {
-                role.push(data[i].title)
+                roles.push(data[i].title)
             }
 
+            inquirer
+                .prompt([
+                    {
+                        name: 'employee_id',
+                        message: "Who's role needs to be updated",
+                        type: 'list',
+                        choices: employees
+                    },
+                    {
+                        name: 'role_id',
+                        message: "What is the new role?",
+                        type: 'list',
+                        choices: roles
+                    }
+                ]).then(function ({ employee_id, role_id }) {
+                    //UPDATE `table_name` SET `column_name` = `new_value' [WHERE condition]
+                    connection.query(`UPDATE employee SET role_id = ${roles.indexOf(role_id) + 1} WHERE id = ${employees.indexOf(employee_id) + 1}`, function (err, data) {
+                        if (err) throw err;
 
-        inquirer
-        .prompt([
-            {
-                type:'list',
-                name: 'employeeRole',
-                message: "Which employee would you like to change their role?",
-                choices:employees
-            },
-            {
-                type:'list',
-                name:'newRole',
-                message: "What is the employees new Role?",
-                choices: role
-            }
-        ])
-        .then(function({employeeRole,newRole}){
-            connection.query(`UPDATE employee SET role_id = ${role.indexOf(newRole) + 1} WHERE id = ${employees.indexOf(employeeRole) + 1}`, function (err, data) {
-                if (err) throw err;
-                console.log("Employee Role updated!")
-                promptInfo();
-     
-            })
+                        promptInfo();
+                    })
+                })
         })
-      })
-    }))
+
+    })
 }
