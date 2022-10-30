@@ -28,49 +28,6 @@ const connection = mysql.createConnection(
 
 //functions to prompt the command line with all the following options, view, add, update or exit 
 
-
-
-function viewAllDepartment(){
-    connection.query(`SELECT * FROM department`,function(err,data){
-        if(err) throw err;
-        console.table(data);
-    });
-    promptInfo();
-};
-
-function viewRoles(){
-    connection.query(`SELECT * FROM roles`,function(err,data){
-    if(err) throw err;
-    console.table(data)
-});
-    promptInfo();
-};
-function viewAllEmployees(){
-    connection.query(`SELECT * FROM employee`,function(err,data){
-    if(err) throw err;
-    console.table(data)
-});
-    promptInfo();   
-};
-
-function addDepartment(){
-    inquirer
-        .prompt(
-            {
-                name: 'name',
-                message: "What is the department's name?",
-                type: 'input'
-            }
-            ).then(function ({ name }) {
-                connection.query(`INSERT INTO department (name) VALUES ('${name}')`, function (err, data) {
-                    if (err) throw err;
-                    console.log(`Added`)
-                    ();
-            })
-        })
-
-}
-
 function promptInfo(){
     inquirer
     .prompt({
@@ -110,3 +67,75 @@ function promptInfo(){
     });
 }
 promptInfo();
+
+
+//functions to view data from in the department, roles and employees table
+function viewAllDepartment(){
+    connection.query(`SELECT * FROM department`,function(err,data){
+        if(err) throw err;
+         //using console.table to show all of the data from department
+        console.table(data);
+    });
+    //prompting the user again to see if they want to take another action
+    promptInfo();
+};
+
+function viewRoles(){
+    connection.query(`SELECT * FROM roles`,function(err,data){
+    if(err) throw err;
+    //using console.table to show all of the data from roles
+    console.table(data)
+});
+    promptInfo();
+};
+function viewAllEmployees(){
+    connection.query(`SELECT * FROM employee`,function(err,data){
+    if(err) throw err;
+    //using console.table to show all of the data form employees
+    console.table(data)
+});
+ //prompting the user again to see if they want to take another action
+    promptInfo();   
+};
+
+//functions to add data to either the depatments, roles or employees
+function addDepartment(){
+    //prompting the user to input information about the department 
+    inquirer
+        .prompt(
+            {
+                name: 'name',
+                message: "What is the department's name?",
+                type: 'input'
+            }
+            ).then(function ({ name }) {
+                //using mysql qery to insert the name to the department 
+                connection.query(`INSERT INTO department (name) VALUES ('${name}')`, function (err, data) {
+                    if (err) throw err;
+                    console.log(`Added Department`)
+                     //prompting the user again to see if they want to take another action
+                    promptInfo();
+            })
+        });
+}
+
+function addRole(){
+    //create an array for all departments and loop through them to find the role within it 
+    let departmentArr = [];
+    connection.query(`SELECT * FROM department`,function(err,data){
+        if(err) throw err;
+    
+        for(var i =0; i<data.length;i++){
+            departmentArr.push(data[i].name)
+        }
+
+        inquirer
+        .prompt([
+            
+        ])
+
+    });
+}
+
+
+
