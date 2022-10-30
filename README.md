@@ -14,7 +14,7 @@ This application uses the command line to have users input information about dep
 
 
 ## Walk Through Video 
-[Walk Through Video](https://drive.google.com/file/d/1D2ZTElEXfod2lWHqoyS_T5UpQBUxTkdo/view)
+[Walk Through Video](https://drive.google.com/file/d/1OqqDVa7mHg9yIGeP4X6gWRA5FHOzQSf1/view)
 
 ## Code Snippet
 This function uses the inqurier prompt method to prompt the user to answer questions in the command line for information about the users employee. The information provided is added to the employee table in mysql. 
