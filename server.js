@@ -21,51 +21,14 @@ const connection = mysql.createConnection(
    
   );
 
-  connection.connect(function(err){
-    if (err) throw err;
-    promptInfo();
-  });
+//   connection.connect(function(err){
+//     if (err) throw err;
+//     promptInfo();
+//   });
 
 //functions to prompt the command line with all the following options, view, add, update or exit 
 
-function promptInfo(){
-    inquirer
-    .prompt({
-        type: "list",
-        name: "firstOption",
-        message: "What would you like to do?",
-        choices:["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","Exit"]
-    })
-    .then(function({answer}) {
-        switch(answer){
-            case "View all Departments":
-                viewAllDepartment();
-                break;
-            case "View all Roles":
-                viewRoles();
-                break;
-            case "View all Employees":
-                viewAllEmployees();
-                break;
-            case "Add a Department":
-                addDepartment();
-                break;
-            case "Add a Role":
-                addRole();
-                break;
-            case "Add an Employee":
-                addEmployee();
-                break;
-            case "Update an Employee Role":
-                updateEmployeeRole();
-                break;
-            default:
-                connection.end();
-                break;
-        }
 
-    });
-}
 
 function viewAllDepartment(){
     connection.query(`SELECT * FROM department`,function(err,data){
@@ -108,3 +71,42 @@ function addDepartment(){
 
 }
 
+function promptInfo(){
+    inquirer
+    .prompt({
+        type: "list",
+        name: "option",
+        message: "What would you like to do?",
+        choices:["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","Exit"]
+    })
+    .then(function({option}) {
+        switch(option){
+            case "View all Departments":
+                viewAllDepartment();
+                break;
+            case "View all Roles":
+                viewRoles();
+                break;
+            case "View all Employees":
+                viewAllEmployees();
+                break;
+            case "Add a Department":
+                addDepartment();
+                break;
+            case "Add a Role":
+                addRole();
+                break;
+            case "Add an Employee":
+                addEmployee();
+                break;
+            case "Update an Employee Role":
+                updateEmployeeRole();
+                break;
+            case "Exit":
+                connection.end();
+                break;
+        }
+
+    });
+}
+promptInfo();
