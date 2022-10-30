@@ -1,5 +1,6 @@
-const SQL = require("mysql2");
+const mysql= require("mysql2");
 const inquirer = require("inquirer");
+require("console.table");
 // const express = require("express");
 // const PORT = process.env.PORT || 3001;
 // const app = express();
@@ -7,7 +8,7 @@ const inquirer = require("inquirer");
 
 
 //Connect to mysql database 
-const db = SQL.createConnection(
+const connection = mysql.createConnection(
     {
       host: 'localhost',
       // MySQL username,
@@ -19,6 +20,11 @@ const db = SQL.createConnection(
     console.log(`Connected to the employees_db database.`)
    
   );
+
+  connection.connect(function(err){
+    if (err) throw err;
+    onFirstQuestion();
+  });
 
 //functions to prompt the command line with all the following options, view, add, update or exit 
 
@@ -62,7 +68,7 @@ function onFirstQuestion(){
 }
 
 function viewAllDepartment(){
-    db.query(`SELECT * FROM department`,function(err,data){
+    connection.query(`SELECT * FROM department`,function(err,data){
         if(err) throw err;
         console.table(data)
         onFirstQuestion();
@@ -70,14 +76,14 @@ function viewAllDepartment(){
 };
 
 function viewRoles(){
-    db.query(`SELECT * FROM roles`,function(err,data){
+    connection.query(`SELECT * FROM roles`,function(err,data){
     if(err) throw err;
     console.table(data)
     onFirstQuestion();
 });
 };
 function viewAllEmployees(){
-    db.query(`SELECT * FROM employee`,function(err,data){
+    connection.query(`SELECT * FROM employee`,function(err,data){
     if(err) throw err;
     console.table(data)
     onFirstQuestion();
