@@ -15,7 +15,7 @@ const connection = mysql.createConnection(
       user: 'root',
       // MySQL password
       password: 'password',
-      database: 'employeeTracker_db'
+      database: 'employees_db'
     },
     console.log(`Connected to the employees_db database.`)
    
@@ -23,12 +23,12 @@ const connection = mysql.createConnection(
 
   connection.connect(function(err){
     if (err) throw err;
-    onFirstQuestion();
+    promptInfo();
   });
 
 //functions to prompt the command line with all the following options, view, add, update or exit 
 
-function onFirstQuestion(){
+function promptInfo(){
     inquirer
     .prompt({
         type: "list",
@@ -36,7 +36,7 @@ function onFirstQuestion(){
         message: "What would you like to do?",
         choices:["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","Exit"]
     })
-    .then((answer) =>{
+    .then(function({answer}) {
         switch(answer){
             case "View all Departments":
                 viewAllDepartment();
@@ -60,7 +60,7 @@ function onFirstQuestion(){
                 updateEmployeeRole();
                 break;
             default:
-                db.end();
+                connection.end();
                 break;
         }
 
@@ -70,25 +70,41 @@ function onFirstQuestion(){
 function viewAllDepartment(){
     connection.query(`SELECT * FROM department`,function(err,data){
         if(err) throw err;
-        console.table(data)
-        onFirstQuestion();
+        console.table(data);
     });
+    promptInfo();
 };
 
 function viewRoles(){
     connection.query(`SELECT * FROM roles`,function(err,data){
     if(err) throw err;
     console.table(data)
-    onFirstQuestion();
 });
+    promptInfo();
 };
 function viewAllEmployees(){
     connection.query(`SELECT * FROM employee`,function(err,data){
     if(err) throw err;
     console.table(data)
-    onFirstQuestion();
 });
+    promptInfo();   
 };
 
+function addDepartment(){
+    inquirer
+        .prompt(
+            {
+                name: 'name',
+                message: "What is the department's name?",
+                type: 'input'
+            }
+            ).then(function ({ name }) {
+                connection.query(`INSERT INTO department (name) VALUES ('${name}')`, function (err, data) {
+                    if (err) throw err;
+                    console.log(`Added`)
+                    ();
+            })
+        })
 
-onFirstQuestion();
+}
+
