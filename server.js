@@ -154,13 +154,17 @@ function addRole(){
             //using the inteteger value inputed by the user to find which department the role is in
             let departmentIndex = departmentArr.indexOf(departmentId);
             //adding the inputs into the role table in mysql
-            connection.query(`INSERT INTO role (title, salary, department_id) VALUES ('${title}', '${salary}', ${departmentIndex})`, function (err, data) {
+            connection.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${title}', '${salary}', ${departmentIndex})`, function (err, data) {
                 if (err) throw err;
                 console.log("Role Added");
                 promptInfo();
             })
         })
     });
+}
+
+function addEmployee(){
+
 }
 
 

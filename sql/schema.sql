@@ -18,11 +18,11 @@ PRIMARY KEY(id)
 DROP TABLE IF EXISTS roles;
 
 CREATE TABLE roles(
-id INT auto_increment PRIMARY KEY NOT NULL,
-title VARCHAR(30),
-salary DECIMAL(10),
-department_id INT,
-FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE CASCADE
+   id INTEGER NOT NULL AUTO_INCREMENT,
+    title VARCHAR(30) NOT NULL,
+    salary DECIMAL NOT NULL,
+    department_id INT NOT NULL,
+    PRIMARY KEY (id)
 );
 
 --create employess table --
