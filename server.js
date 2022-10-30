@@ -60,6 +60,7 @@ function promptInfo(){
                 updateEmployeeRole();
                 break;
             case "Exit":
+                //using the mysql method of .end to stop the command line from running 
                 connection.end();
                 break;
         }
@@ -97,6 +98,7 @@ function viewAllEmployees(){
  //prompting the user again to see if they want to take another action
     promptInfo();   
 };
+
 
 //functions to add data to either the depatments, roles or employees
 function addDepartment(){
@@ -192,3 +194,52 @@ function addEmployee(){
 
 
 
+//function to update an employes role
+
+function updateEmployeeRole() {
+    //gather information about all of the employees
+    connection.query(y(`SELECT * FROM employee`, function (err, data) {
+        if (err) throw err;
+
+        let employees = [];
+        //adding all employes in the employee table to a new array
+        for(var i =0; i<data.length;i++){
+            employees.push(data[i].firstName)
+        }
+
+        //selecting everything from roles and adding it to a new array
+        let role = [];
+        connection.query(`SELECT * FROM role`, function (err, data) {
+            if (err) throw err;
+
+            for (let i = 0; i < data.length; i++) {
+                role.push(data[i].title)
+            }
+
+
+        inquirer
+        .prompt([
+            {
+                type:'list',
+                name: 'employeeRole',
+                message: "Which employee would you like to change their role?",
+                choices:employees
+            },
+            {
+                type:'list',
+                name:'newRole',
+                message: "What is the employees new Role?",
+                choices: role
+            }
+        ])
+        .then(function({employeeRole,newRole}){
+            connection.query(`UPDATE employee SET role_id = ${role.indexOf(newRole) + 1} WHERE id = ${employees.indexOf(employeeRole) + 1}`, function (err, data) {
+                if (err) throw err;
+                console.log("Employee Role updated!")
+                promptInfo();
+     
+            })
+        })
+      })
+    }))
+}
