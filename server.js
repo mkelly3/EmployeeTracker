@@ -59,7 +59,6 @@ function onFirstQuestion(){
         }
 
     });
-
 }
 
 function viewAllDepartment(){
