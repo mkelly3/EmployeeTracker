@@ -120,51 +120,74 @@ function addDepartment(){
 }
 
 function addRole(){
-    //create an array for all departments and loop through them to find the role within it 
-
-    let departmentArr = [];
-    connection.query(`SELECT * FROM department`,function(err,data){
-        if(err) throw err;
-        
-        for(var i =0; i<data.length;i++){
-            departmentArr.push(data[i].name)
+   
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            name: 'title',
+            message: "What is the role?"
+                
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'How much do they make?'
+                
+        },
+        {   
+            type: 'input',
+            name: 'departmentId',
+            message: 'What is the department id?'
         }
-
-        inquirer
-        .prompt([
-            {
-                type: 'input',
-                name: 'title',
-                message: "What is the role?"
-                
-            },
-            {
-                type: 'input',
-                name: 'salary',
-                message: 'How much do they make?'
-                
-            },
-            {   
-                type: 'input',
-                name: 'departmentId',
-                message: 'What is the department id?'
-            }
         ])
         .then(function ({ title, salary, departmentId }) {
             //using the inteteger value inputed by the user to find which department the role is in
-            let departmentIndex = departmentArr.indexOf(departmentId);
+            // let departmentIndex = departmentArr.indexOf(departmentId);
             //adding the inputs into the role table in mysql
-            connection.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${title}', '${salary}', ${departmentIndex})`, function (err, data) {
+            connection.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${title}', '${salary}', ${departmentId})`, function (err, data) {
                 if (err) throw err;
                 console.log("Role Added");
                 promptInfo();
             })
         })
-    });
 }
 
 function addEmployee(){
-
+   //prompting user for information about the employee
+   inquirer
+   .prompt([
+    {
+        type: 'input',
+        name: 'firstName',
+        message: "What is the employee's first name?"
+        
+    },
+    {
+        type: 'input',
+        name: 'lastName',
+        message: "What is the employee's last name?"
+        
+    },
+    {   
+        type: 'input',
+        name: 'roleId',
+        message: 'What is the employees role id?'
+    },
+    {   
+        type: 'input',
+        name: 'managerId',
+        message: 'What is the employees manager id if they have one?'
+    }
+   ])
+   .then(function({firstName, lastName,roleId,managerId}){
+    //use the query method to insert all of the values into the employee table
+    connection.query(`INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}','${roleId}',${managerId})`, function (err, data) {
+        if (err) throw err;
+        console.log("Employee Added");
+        promptInfo();
+    })
+   });
 }
 
 
