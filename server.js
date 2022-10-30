@@ -34,7 +34,15 @@ function promptInfo(){
         type: "list",
         name: "option",
         message: "What would you like to do?",
-        choices:["View all Departments","View all Roles","View all Employees","Add a Department","Add a Role","Add an Employee","Update an Employee Role","Exit"]
+        choices:["View all Departments",
+        "View all Roles",
+        "View all Employees",
+        "Add a Department",
+        "Add a Role",
+        "Add an Employee",
+        "Update an Employee Role",
+        "Update an Employees Manager",
+        "Exit"]
     })
     .then(function({option}) {
         switch(option){
@@ -58,6 +66,9 @@ function promptInfo(){
                 break;
             case "Update an Employee Role":
                 updateEmployeeRole();
+                break;
+            case"Update an Employees Manager":
+                updateManager();
                 break;
             case "Exit":
                 //using the mysql method of .end to stop the command line from running 
@@ -239,4 +250,50 @@ function updateEmployeeRole() {
         })
 
     })
+}
+
+
+function updateManager(){
+    connection.query(`SELECT * FROM employee`, function (err, data) {
+        if (err) throw err;
+
+        //creating an array of the current employes
+        let employees = [];
+
+        for (let i = 0; i < data.length; i++) {
+            employees.push(data[i].first_name)
+        }
+
+        //prompting the user for the employer and new manager
+        inquirer
+            .prompt([
+                {
+                    name: 'employeeId',
+                    message: 'Who would you like to update?',
+                    type: 'list',
+                    choices: employees
+                },
+                {
+                    name: "managerId",
+                    message: "Who's their new manager?",
+                    type: 'list',
+                    choices: ['none'].concat(employees)
+                }
+            ]).then(({ employeeId, managerId }) => {
+                let queryText = ""
+                if (managerId !== "none") {
+                    queryText = `UPDATE employee SET manager_id = ${employees.indexOf(managerId) + 1} WHERE id = ${employees.indexOf(employeeId) + 1}`
+                } else {
+                    queryText = `UPDATE employee SET manager_id = ${null} WHERE id = ${employees.indexOf(employeeId) + 1}`
+                }
+
+                connection.query(queryText, function (err, data) {
+                    if (err) throw err;
+
+                    promptInfo();
+                })
+
+            })
+
+    });
 }
