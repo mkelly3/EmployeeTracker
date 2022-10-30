@@ -121,19 +121,45 @@ function addDepartment(){
 
 function addRole(){
     //create an array for all departments and loop through them to find the role within it 
+
     let departmentArr = [];
     connection.query(`SELECT * FROM department`,function(err,data){
         if(err) throw err;
-    
+        
         for(var i =0; i<data.length;i++){
             departmentArr.push(data[i].name)
         }
 
         inquirer
         .prompt([
-            
+            {
+                type: 'input',
+                name: 'title',
+                message: "What is the role?"
+                
+            },
+            {
+                type: 'input',
+                name: 'salary',
+                message: 'How much do they make?'
+                
+            },
+            {   
+                type: 'input',
+                name: 'departmentId',
+                message: 'What is the department id?'
+            }
         ])
-
+        .then(function ({ title, salary, departmentId }) {
+            //using the inteteger value inputed by the user to find which department the role is in
+            let departmentIndex = departmentArr.indexOf(departmentId);
+            //adding the inputs into the role table in mysql
+            connection.query(`INSERT INTO role (title, salary, department_id) VALUES ('${title}', '${salary}', ${departmentIndex})`, function (err, data) {
+                if (err) throw err;
+                console.log("Role Added");
+                promptInfo();
+            })
+        })
     });
 }
 
