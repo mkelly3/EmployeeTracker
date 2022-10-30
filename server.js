@@ -16,7 +16,7 @@ const db = SQL.createConnection(
       password: 'password',
       database: 'employeeTracker_db'
     },
-    console.log(`Connected to the employeeTracker_db database.`)
+    console.log(`Connected to the employees_db database.`)
    
   );
 
@@ -62,8 +62,14 @@ function onFirstQuestion(){
 
 }
 
+function viewAllDepartment(){
+    db.query(`SELECT * FROM department`,function(err,data){
+        if(err) throw err;
+        console.table(data)
+        onFirstQuestion();
+    });
 
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-//   });
+}
+
+
 onFirstQuestion();

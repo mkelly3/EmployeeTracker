@@ -1,10 +1,10 @@
 --Create a Courese Database--
-DROP DATABASE IF EXISTS employeeTracker_db;
+DROP DATABASE IF EXISTS employees_db;
 
 --create an employeeTracker_db and use it--
-CREATE DATABASE employeeTracker_db;
+CREATE DATABASE employees_db;
 
-USE employeeTracker_db;
+USE employees_db;
 
 --create deparment table--
 DROP TABLE IF EXISTS department;
@@ -15,9 +15,9 @@ PRIMARY KEY(id)
 );
 
 --In the roles table need an id that relates to the primary key, title, salary, department_id
-DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS roles;
 
-CREATE TABLE role(
+CREATE TABLE roles(
 id INT auto_increment PRIMARY KEY NOT NULL,
 title VARCHAR(30),
 salary DECIMAL(10),
